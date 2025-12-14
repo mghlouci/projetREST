@@ -1,0 +1,41 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: cinema
+      POSTGRES_USER: cinema_user
+      POSTGRES_PASSWORD: cinema_pass
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "5432:5432"
+
+
+  backend:
+    build: ./projetREST-back
+    container_name: projetrest-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/cinema
+      SPRING_DATASOURCE_USERNAME: cinema_user
+      SPRING_DATASOURCE_PASSWORD: cinema_pass
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA: cinema
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+  frontend:
+    build: ./projetREST-front
+    container_name: projetrest-frontend
+    environment:
+      # si ton front appelle l'API via URL absolue, mets ça et utilise-le dans api.js
+      VITE_API_BASE: http://localhost:8080/api
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
