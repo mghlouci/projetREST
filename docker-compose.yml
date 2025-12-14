@@ -30,7 +30,6 @@ services:
     build: ./projetREST-front
     container_name: projetrest-frontend
     environment:
-      # si ton front appelle l'API via URL absolue, mets ça et utilise-le dans api.js
       VITE_API_BASE: http://localhost:8080/api
     ports:
       - "5173:5173"

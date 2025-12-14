@@ -315,6 +315,7 @@ const styles = {
     gap: '0.5rem',
     fontSize: '0.9rem',
     fontWeight: '500',
+    color: '#1a1a1a',
   },
   checkboxLabel: {
     display: 'flex',
@@ -322,14 +323,18 @@ const styles = {
     gap: '0.5rem',
     fontSize: '0.9rem',
     fontWeight: '500',
+    color: '#1a1a1a',
   },
   input: {
     padding: '0.8em 1.2em',
     fontSize: '1em',
     borderRadius: '12px',
     border: '2px solid #e0e0e0',
+    backgroundColor: 'white',
+    color: '#1a1a1a',
     flex: 1,
     transition: 'all 0.3s ease',
+    outline: 'none',
   },
   submitButton: {
     padding: '0.8em 1.8em',

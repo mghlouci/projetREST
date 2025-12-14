@@ -40,8 +40,8 @@ export default function FilmDetails() {
   if (error || !film) {
     return (
       <div style={styles.container}>
-        <div style={styles.error}>
-          {error || 'Film introuvable'}
+        <div style={styles.errorCard}>
+          <div style={styles.error}>{error || 'Film introuvable'}</div>
           <button style={styles.backButton} onClick={() => navigate('/films')}>
             Retour aux films
           </button>
@@ -52,15 +52,20 @@ export default function FilmDetails() {
 
   return (
     <div style={styles.container}>
-      <div style={styles.header}>
+      <div style={styles.hero}>
         <button style={styles.backButton} onClick={() => navigate('/films')}>
           ← Retour aux films
         </button>
-        <h1 style={styles.title}>{film.titre}</h1>
+        <div style={styles.heroContent}>
+          <div style={styles.logoContainer}>
+            <span style={styles.logo}>🎬</span>
+          </div>
+          <h1 style={styles.title}>{film.titre}</h1>
+        </div>
       </div>
 
       <div style={styles.details}>
-        <div style={styles.infoSection}>
+        <div style={styles.card}>
           <h2 style={styles.sectionTitle}>Informations</h2>
           <div style={styles.infoGrid}>
             <div style={styles.infoItem}>
@@ -79,13 +84,13 @@ export default function FilmDetails() {
             )}
             {film.sousTitre && (
               <div style={styles.infoItem}>
-                <strong>Sous-titres:</strong> {film.sousTitre}
+                <strong>Sous-titres:</strong> {film.sousTitre ? 'Oui' : 'Non'}
               </div>
             )}
           </div>
         </div>
 
-        <div style={styles.programmationsSection}>
+        <div style={styles.card}>
           <h2 style={styles.sectionTitle}>Programmations</h2>
           {film.programmations && film.programmations.length > 0 ? (
             <div style={styles.programmationsList}>
@@ -144,58 +149,101 @@ function getJourLabel(jour) {
 
 const styles = {
   container: {
+    minHeight: '100vh',
+    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
     padding: '2rem',
-    maxWidth: '1200px',
-    margin: '0 auto',
+    position: 'relative',
+    overflow: 'hidden',
   },
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '1rem',
-    marginBottom: '2rem',
+  hero: {
+    textAlign: 'center',
+    marginBottom: '3rem',
+    zIndex: 1,
+    position: 'relative',
   },
   backButton: {
-    padding: '0.5rem 1rem',
+    position: 'absolute',
+    top: '0',
+    left: '0',
+    padding: '0.6rem 1.2rem',
     fontSize: '1rem',
-    borderRadius: '8px',
-    border: '1px solid transparent',
+    borderRadius: '12px',
+    border: 'none',
     cursor: 'pointer',
-    backgroundColor: '#1a1a1a',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     color: 'white',
+    backdropFilter: 'blur(10px)',
+    transition: 'all 0.3s ease',
+    fontWeight: '600',
+  },
+  heroContent: {
+    maxWidth: '800px',
+    margin: '0 auto',
+  },
+  logoContainer: {
+    marginBottom: '1rem',
+    display: 'inline-block',
+    animation: 'float 3s ease-in-out infinite',
+  },
+  logo: {
+    fontSize: '4rem',
+    display: 'block',
   },
   title: {
-    fontSize: '2.5rem',
+    fontSize: '3.5rem',
+    fontWeight: '800',
+    margin: '0 0 0.5rem 0',
+    background: 'linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+    letterSpacing: '-0.02em',
   },
   loading: {
     textAlign: 'center',
     padding: '3rem',
     fontSize: '1.2rem',
+    color: 'rgba(255, 255, 255, 0.9)',
   },
-  error: {
+  errorCard: {
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    borderRadius: '20px',
+    padding: '2.5rem',
+    boxShadow: '0 10px 40px rgba(0, 0, 0, 0.2)',
+    maxWidth: '600px',
+    margin: '0 auto',
     textAlign: 'center',
-    padding: '3rem',
-    fontSize: '1.2rem',
-    color: '#ff4444',
     display: 'flex',
     flexDirection: 'column',
-    gap: '1rem',
+    gap: '1.5rem',
     alignItems: 'center',
+  },
+  error: {
+    fontSize: '1.2rem',
+    color: '#ff4444',
+    fontWeight: '600',
   },
   details: {
     display: 'flex',
     flexDirection: 'column',
     gap: '2rem',
+    maxWidth: '1200px',
+    margin: '0 auto',
+    zIndex: 1,
+    position: 'relative',
   },
-  infoSection: {
-    backgroundColor: '#1a1a1a',
-    padding: '2rem',
-    borderRadius: '8px',
-    border: '1px solid #333',
+  card: {
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    borderRadius: '20px',
+    padding: '2.5rem',
+    boxShadow: '0 10px 40px rgba(0, 0, 0, 0.2)',
+    border: '1px solid rgba(255, 255, 255, 0.3)',
   },
   sectionTitle: {
-    fontSize: '1.8rem',
+    fontSize: '2rem',
     marginBottom: '1.5rem',
-    color: '#646cff',
+    color: '#667eea',
+    fontWeight: '700',
   },
   infoGrid: {
     display: 'grid',
@@ -205,12 +253,7 @@ const styles = {
   infoItem: {
     padding: '0.5rem 0',
     fontSize: '1rem',
-  },
-  programmationsSection: {
-    backgroundColor: '#1a1a1a',
-    padding: '2rem',
-    borderRadius: '8px',
-    border: '1px solid #333',
+    color: '#1a1a1a',
   },
   programmationsList: {
     display: 'flex',
@@ -218,10 +261,10 @@ const styles = {
     gap: '1.5rem',
   },
   programmationCard: {
-    backgroundColor: '#242424',
+    backgroundColor: 'rgba(102, 126, 234, 0.1)',
     padding: '1.5rem',
-    borderRadius: '8px',
-    border: '1px solid #333',
+    borderRadius: '12px',
+    border: '1px solid rgba(102, 126, 234, 0.2)',
   },
   cinemaInfo: {
     marginBottom: '1rem',
@@ -229,10 +272,11 @@ const styles = {
   cinemaName: {
     fontSize: '1.3rem',
     marginBottom: '0.5rem',
-    color: '#646cff',
+    color: '#667eea',
+    fontWeight: '600',
   },
   cinemaAddress: {
-    color: '#aaa',
+    color: '#666',
     margin: 0,
   },
   dates: {
@@ -240,9 +284,11 @@ const styles = {
     display: 'flex',
     gap: '2rem',
     flexWrap: 'wrap',
+    color: '#1a1a1a',
   },
   creneauxSection: {
     marginTop: '1rem',
+    color: '#1a1a1a',
   },
   creneauxList: {
     display: 'flex',
@@ -251,16 +297,17 @@ const styles = {
     marginTop: '0.5rem',
   },
   creneauBadge: {
-    backgroundColor: '#646cff',
+    backgroundColor: '#667eea',
     color: 'white',
     padding: '0.4rem 0.8rem',
     borderRadius: '6px',
     fontSize: '0.9rem',
+    fontWeight: '500',
   },
   noProgrammation: {
     textAlign: 'center',
     padding: '2rem',
-    color: '#aaa',
+    color: '#666',
     fontSize: '1.1rem',
   },
 }

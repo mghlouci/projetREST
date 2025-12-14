@@ -58,14 +58,22 @@ export function register(email, mdp, role) {
 
 /**
  * GET /api/Catalogue/films
- * 
- * - sans param: tous les films 
- * - avec ?ville=Paris: films dans une ville 
+ * Paramètres optionnels:
+ * - ville: filtre par ville
+ * - query: recherche par titre (contient)
  */
-export function getFilms({ ville } = {}) {
-  const q = ville && ville.trim() ? `?ville=${encodeURIComponent(ville.trim())}` : '';
-  return request(`/Catalogue/films${q}`);
+export function getFilms({ ville, query } = {}) {
+  const params = new URLSearchParams();
+
+  if (ville && ville.trim()) params.set('ville', ville.trim());
+  if (query && query.trim()) params.set('query', query.trim());
+
+  const qs = params.toString();
+  const path = qs ? `/Catalogue/films?${qs}` : `/Catalogue/films`;
+
+  return request(path);
 }
+
 
 /**
  * GET /api/Catalogue/films/{id}

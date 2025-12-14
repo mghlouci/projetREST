@@ -33,25 +33,25 @@ public class CatalogueService {
         this.cinemaRepository = cinemaRepository;
     }
 
-    public List<FilmLightResponse> getFilms(String ville) {
+    public List<FilmLightResponse> getFilms(String ville, String query) {
 
-        if (ville == null || ville.isBlank()) {
-            // Tous les films
-            return filmRepository.findAll().stream()
-                    .map(f -> new FilmLightResponse(
-                            f.getId(),
-                            f.getTitre(),
-                            f.getDuree(),
-                            f.getLangue(),
-                            f.getRealisateur(),
-                            f.getAge_min(),
-                            f.getSous_titre()
-                    ))
-                    .toList();
+        List<Film> films;
+
+        boolean hasVille = ville != null && !ville.isBlank();
+        boolean hasQuery = query != null && !query.isBlank();
+
+        if (hasVille) {
+            films = programmationRepository.findFilmsByVilleAndTitreLike(
+                    ville.trim(),
+                    hasQuery ? query.trim() : ""
+            );
+        } else if (hasQuery) {
+            films = filmRepository.findByTitreContainingIgnoreCase(query.trim());
+        } else {
+            films = filmRepository.findAll();
         }
 
-        // Films par ville
-        return programmationRepository.findFilmsByVille(ville).stream()
+        return films.stream()
                 .map(f -> new FilmLightResponse(
                         f.getId(),
                         f.getTitre(),
@@ -63,6 +63,8 @@ public class CatalogueService {
                 ))
                 .toList();
     }
+
+
 
     public FilmDetailsResponse getFilmDetails(Long filmId) {
         Film film = filmRepository.findById(filmId)
@@ -137,18 +139,49 @@ public class CatalogueService {
             List<ProgrammationDetails> programmations
     ) {}
 
-    public CinemaLightResponse getCinemaDetails(Long cinemaId) {
+    public CinemaDetailsResponse getCinemaDetails(Long cinemaId) {
+
         Cinema cinema = cinemaRepository.findById(cinemaId)
                 .orElseThrow(() -> new RuntimeException("Cinéma introuvable"));
 
-        return new CinemaLightResponse(
+        List<Programmation> progs = programmationRepository.findByCinema_Id(cinemaId);
+
+        List<ProgrammationCinemaDetails> progDtos = progs.stream().map(p -> {
+
+            List<CreneauHebdo> creneaux = creneauHebdoRepository.findByProgrammation_Id(p.getId());
+
+            List<CreneauDto> creneauDtos = creneaux.stream()
+                    .map(ch -> new CreneauDto(ch.getJourSemaine(), ch.getHeureDebut()))
+                    .toList();
+
+            Film film = p.getFilm();
+
+            return new ProgrammationCinemaDetails(
+                    p.getId(),
+                    film.getId(),
+                    film.getTitre(),
+                    film.getDuree(),
+                    film.getLangue(),
+                    film.getRealisateur(),
+                    film.getAge_min(),
+                    film.getSous_titre(),
+                    p.getDate_deb(),
+                    p.getDate_fin(),
+                    creneauDtos
+            );
+        }).toList();
+
+        return new CinemaDetailsResponse(
                 cinema.getId(),
                 cinema.getNom(),
                 cinema.getAdresse(),
                 cinema.getVille(),
-                cinema.getProprietaire().getId()
+                cinema.getProprietaire().getId(),
+                progDtos
         );
     }
+
+
 
 
     public record ProgrammationDetails(
@@ -184,4 +217,35 @@ public class CatalogueService {
             Long idProprietaire
     ) {}
 
+
+    public record CinemaDetailsResponse(
+            Long id,
+            String nom,
+            String adresse,
+            String ville,
+            Long idProprietaire,
+            List<ProgrammationCinemaDetails> programmations
+    ) {}
+
+    public record ProgrammationCinemaDetails(
+            Long id,
+            Long filmId,
+            String filmTitre,
+            Integer filmDuree,
+            String filmLangue,
+            String filmRealisateur,
+            Integer filmAgeMin,
+            String filmSousTitre,
+            java.time.LocalDate dateDeb,
+            java.time.LocalDate dateFin,
+            List<CreneauDto> creneaux
+    ) {}
+
+    public record ProgrammationResponse(
+            Long id,
+            String dateDeb,
+            String dateFin,
+            FilmLightResponse film,
+            List<CreneauDto> creneaux
+    ) {}
 }

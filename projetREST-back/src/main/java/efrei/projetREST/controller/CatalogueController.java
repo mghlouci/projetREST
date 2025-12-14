@@ -21,11 +21,11 @@ public class CatalogueController {
 
     @GetMapping("/films")
     public ResponseEntity<List<CatalogueService.FilmLightResponse>> films(
-            @RequestParam(required = false) String ville
+            @RequestParam(required = false) String ville,
+            @RequestParam(required = false) String query
     ) {
-        return ResponseEntity.ok(catalogueService.getFilms(ville));
+        return ResponseEntity.ok(catalogueService.getFilms(ville, query));
     }
-
 
 
     @GetMapping("/films/{id}")
@@ -39,8 +39,10 @@ public class CatalogueController {
     }
 
     @GetMapping("/cinemas/{id}")
-    public ResponseEntity<CatalogueService.CinemaLightResponse> detailsCinema(@PathVariable Long id) {
+    public ResponseEntity<CatalogueService.CinemaDetailsResponse> getCinemaDetails(@PathVariable Long id) {
         return ResponseEntity.ok(catalogueService.getCinemaDetails(id));
     }
+
+
 
 }

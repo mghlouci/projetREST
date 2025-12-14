@@ -105,3 +105,13 @@ button:focus-visible {
 .home-card:hover .cardArrow {
   transform: translateX(10px);
 }
+
+/* Hover effect pour les résultats de recherche */
+.result-item-clickable:hover {
+  transform: translateX(5px) !important;
+  background-color: rgba(102, 126, 234, 0.15) !important;
+}
+
+.result-item-clickable:hover .resultArrow {
+  transform: translateX(10px);
+}

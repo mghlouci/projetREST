@@ -1,7 +1,37 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { getFilms } from '../api/api'
 
 export default function Home() {
   const navigate = useNavigate()
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState([])
+  const [isSearching, setIsSearching] = useState(false)
+
+  async function handleSearch(e) {
+    e.preventDefault()
+    if (!searchQuery.trim()) {
+      setSearchResults([])
+      return
+    }
+
+    try {
+      setIsSearching(true)
+      const films = await getFilms({ query: searchQuery.trim() })
+      setSearchResults(films || [])
+    } catch (error) {
+      console.error('Erreur lors de la recherche:', error)
+      setSearchResults([])
+    } finally {
+      setIsSearching(false)
+    }
+  }
+
+  function handleFilmClick(filmId) {
+    navigate(`/films/${filmId}`)
+    setSearchQuery('')
+    setSearchResults([])
+  }
 
   return (
     <div style={styles.container}>
@@ -15,6 +45,45 @@ export default function Home() {
             Découvrez les derniers films et trouvez votre cinéma
           </p>
         </div>
+      </div>
+
+      <div style={styles.searchContainer}>
+        <form style={styles.searchForm} onSubmit={handleSearch}>
+          <input
+            style={styles.searchInput}
+            type="text"
+            placeholder="Rechercher un film..."
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+          />
+          <button style={styles.searchButton} type="submit" disabled={isSearching}>
+            {isSearching ? 'Recherche...' : '🔍'}
+          </button>
+        </form>
+        {searchResults.length > 0 && (
+          <div style={styles.resultsContainer}>
+            {searchResults.map(film => (
+              <div
+                key={film.id}
+                style={styles.resultItem}
+                className="result-item-clickable"
+                onClick={() => handleFilmClick(film.id)}
+              >
+                <div style={styles.resultIcon}>🎞️</div>
+                <div style={styles.resultContent}>
+                  <h3 style={styles.resultTitle}>{film.titre}</h3>
+                  {film.realisateur && (
+                    <p style={styles.resultSubtitle}>Réalisateur: {film.realisateur}</p>
+                  )}
+                </div>
+                <div style={styles.resultArrow}>→</div>
+              </div>
+            ))}
+          </div>
+        )}
+        {searchQuery && searchResults.length === 0 && !isSearching && (
+          <div style={styles.noResults}>Aucun film trouvé</div>
+        )}
       </div>
 
       <div style={styles.cardsContainer}>
@@ -141,6 +210,89 @@ const styles = {
     fontWeight: 'bold',
     marginTop: 'auto',
     transition: 'transform 0.3s ease',
+  },
+  searchContainer: {
+    width: '100%',
+    maxWidth: '600px',
+    marginBottom: '2rem',
+    zIndex: 1,
+  },
+  searchForm: {
+    display: 'flex',
+    gap: '0.5rem',
+    marginBottom: '1rem',
+  },
+  searchInput: {
+    flex: 1,
+    padding: '1em 1.5em',
+    fontSize: '1.1em',
+    borderRadius: '50px',
+    border: 'none',
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    color: '#1a1a1a',
+    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+    outline: 'none',
+    transition: 'all 0.3s ease',
+  },
+  searchButton: {
+    padding: '1em 1.5em',
+    fontSize: '1.2em',
+    borderRadius: '50px',
+    border: 'none',
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+    minWidth: '60px',
+  },
+  resultsContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    borderRadius: '20px',
+    padding: '1rem',
+    boxShadow: '0 10px 40px rgba(0, 0, 0, 0.2)',
+    maxHeight: '400px',
+    overflowY: 'auto',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.5rem',
+  },
+  resultItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '1rem',
+    padding: '1rem',
+    borderRadius: '12px',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+    backgroundColor: 'rgba(102, 126, 234, 0.05)',
+  },
+  resultIcon: {
+    fontSize: '2rem',
+  },
+  resultContent: {
+    flex: 1,
+  },
+  resultTitle: {
+    fontSize: '1.2rem',
+    fontWeight: '600',
+    margin: '0 0 0.25rem 0',
+    color: '#1a1a1a',
+  },
+  resultSubtitle: {
+    fontSize: '0.9rem',
+    color: '#666',
+    margin: 0,
+  },
+  resultArrow: {
+    fontSize: '1.5rem',
+    color: '#667eea',
+    fontWeight: 'bold',
+  },
+  noResults: {
+    textAlign: 'center',
+    padding: '1rem',
+    color: 'rgba(255, 255, 255, 0.9)',
+    fontSize: '1rem',
   },
 }
 

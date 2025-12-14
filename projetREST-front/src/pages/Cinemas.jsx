@@ -103,11 +103,17 @@ export default function Cinemas() {
           {allCinemas.length > 0 ? (
             <div style={styles.cinemasGrid}>
               {allCinemas.map(cinema => (
-                <div key={cinema.id} style={styles.cinemaCard}>
+                <div
+                  key={cinema.id}
+                  className="cinema-card-clickable"
+                  style={styles.cinemaCard}
+                  onClick={() => navigate(`/cinemas/${cinema.id}`)}
+                >
                   <div style={styles.cinemaIcon}>🏛️</div>
                   <h3 style={styles.cinemaName}>{cinema.nom}</h3>
                   <p style={styles.cinemaAddress}>{cinema.adresse}</p>
                   <p style={styles.cinemaCity}>{cinema.ville}</p>
+                  <div style={styles.cinemaArrow}>→</div>
                 </div>
               ))}
             </div>
