@@ -1,3 +1,5 @@
+GROUPE : Lounes SAMAH, Merwan GHLOUCI, Florian MOUNIAMA, Elyas EL MOUKADIM, Imran WIRAN
+
 Bienvenue dans CINÉ ELMI, votre portail de films et de séances. Ce projet utilise une base de données PostgreSQL, un backend Spring Boot et un frontend Vite/React orchestrés par Docker.
 
 Installation et lancement :
