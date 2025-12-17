@@ -19,4 +19,8 @@ Installation et lancement :
 5-Arrêter et nettoyer : lorsque vous souhaitez arrêter l’application et supprimer les conteneurs ainsi que les volumes persistants, exécutez :
 	
 	docker compose down -v
+
+6-Le site est accessible à l'adresse suivant :
+
+	http://localhost:5173
 	
