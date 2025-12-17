@@ -16,7 +16,7 @@ export default function Header({ isConnected, onAuthChange }) {
     <header style={styles.header}>
       <div style={styles.container}>
         <h1 style={styles.logo} onClick={() => navigate('/')}>
-          🎬 Cinéma
+          🎬 Ciné ELMI
         </h1>
         <div style={styles.nav}>
           {isConnected ? (

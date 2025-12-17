@@ -40,7 +40,7 @@ export default function Home() {
           <div style={styles.logoContainer}>
             <span style={styles.logo}>🎬</span>
           </div>
-          <h1 style={styles.title}>Cinéma</h1>
+          <h1 style={styles.title}>Ciné ELMI</h1>
           <p style={styles.subtitle}>
             Découvrez les derniers films et trouvez votre cinéma
           </p>
