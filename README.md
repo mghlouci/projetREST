@@ -1,10 +1,3 @@
-  _____    _____    _   _    ______        ______    _         __  __    _____   
- / ____|  |_   _|  | \ | |  |  ____|      |  ____|  | |       |  \/  |  |_   _|  
-| |         | |    |  \| |  | |__         | |__     | |       | \  / |    | |    
-| |         | |    | . ` |  |  __|        |  __|    | |       | |\/| |    | |    
-| |____    _| |_   | |\  |  | |____       | |____   | |____   | |  | |   _| |_   
- \_____|  |_____|  |_| \_|  |______|      |______|  |______|  |_|  |_|  |_____|  
-
 Bienvenue dans CINÉ ELMI, votre portail de films et de séances. Ce projet utilise une base de données PostgreSQL, un backend Spring Boot et un frontend Vite/React orchestrés par Docker.
 
 Installation et lancement :
